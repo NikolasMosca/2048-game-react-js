@@ -1,0 +1,14 @@
+@import '../../variables';
+
+.Cell {
+    background: $background-cell;
+    border: 10px solid $background-grid;
+    border-radius: 100%;
+    font: {
+        size: 55px;
+        weight: 700;
+    }
+    color: $color-cell;
+
+    @extend %flex-center;
+}

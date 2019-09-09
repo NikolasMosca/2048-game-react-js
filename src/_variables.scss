@@ -1,0 +1,9 @@
+$background-grid: #bbada0;
+$background-cell: #eee4da;
+$color-cell: rgb(119, 110, 101);
+
+%flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
