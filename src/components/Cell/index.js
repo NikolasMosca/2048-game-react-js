@@ -2,9 +2,9 @@ import React from 'react';
 import './style.scss';
 
 function Cell(props) {
-  const { value } = props;
+  const { index, value } = props;
   return (
-    <div className="Cell">
+    <div className={'Cell' + ((value > 0) ? ` active cell-${index}` : '')}>
       {(value > 0) ? value : ''}
     </div>
   );

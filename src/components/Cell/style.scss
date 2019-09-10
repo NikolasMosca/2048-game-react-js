@@ -11,4 +11,29 @@
     color: $color-cell;
 
     @extend %flex-center;
+
+    &.active {
+        background: black;
+        position: absolute;
+        width: 25%;
+        height: 25%;
+        transition: 0.3s;
+    }
+
+    &.cell-0 { transform: translate(0, 0); }
+    &.cell-1 { transform: translate(100%, 0); }
+    &.cell-2 { transform: translate(200%, 0); }
+    &.cell-3 { transform: translate(300%, 0); }
+    &.cell-4 { transform: translate(0, 100%); }
+    &.cell-5 { transform: translate(100%, 100%); }
+    &.cell-6 { transform: translate(200%, 100%); }
+    &.cell-7 { transform: translate(300%, 100%); }
+    &.cell-8 { transform: translate(0, 200%); }
+    &.cell-9 { transform: translate(100%, 200%); }
+    &.cell-10 { transform: translate(200%, 200%); }
+    &.cell-11 { transform: translate(300%, 200%); }
+    &.cell-12 { transform: translate(0, 300%); }
+    &.cell-13 { transform: translate(100%, 300%); }
+    &.cell-14 { transform: translate(200%, 300%); }
+    &.cell-15 { transform: translate(300%, 300%); }
 }
