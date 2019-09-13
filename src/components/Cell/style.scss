@@ -17,7 +17,7 @@
         position: absolute;
         width: 25%;
         height: 25%;
-        transition: 0.3s;
+        transition: 0.4s;
     }
 
     &.cell-0 { transform: translate(0, 0); }
@@ -36,4 +36,22 @@
     &.cell-13 { transform: translate(100%, 300%); }
     &.cell-14 { transform: translate(200%, 300%); }
     &.cell-15 { transform: translate(300%, 300%); }
+
+    &.value-2 { background: #001f3f; color: white; }
+    &.value-4 { background: #0074D9; color: white; }
+    &.value-8 { background: #7FDBFF; color: white; }
+    &.value-16 { background: #39CCCC; color: white; }
+    &.value-32 { background: #3D9970; color: white; }
+    &.value-64 { background: #2ECC40; color: white; }
+    &.value-128 { background: #01FF70; color: white; }
+    &.value-256 { background: #FFDC00; color: white; }
+    &.value-512 { background: #FF851B; color: white; }
+    &.value-1024 { background: #FF4136; color: white; }
+    &.value-2048 { background: #85144b; color: white; }
+    
+    &.value-4096 { background: #F012BE; color: white; }
+    &.value-8192 { background: #B10DC9; color: white; }
+    &.value-16384 { background: #111111; color: white;}
+    &.value-32768 { background: #AAAAAA; color: black; }
+    &.value-65356 { background: #DDDDDD; color: black; }
 }
