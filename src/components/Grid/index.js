@@ -6,7 +6,7 @@ import Cell from '../Cell';
 class Grid extends PureComponent {
     state = {
         cells: [],
-        lastId: 1
+        lastId: 100
     }
 
     getLeftPositions = () => 
@@ -31,53 +31,60 @@ class Grid extends PureComponent {
         let { cells, lastId } = this.state;
         cells.push(this.addRandomCell(cells, ++lastId));
         cells.push(this.addRandomCell(cells, ++lastId));
+        cells.push(this.addRandomCell(cells, ++lastId));
+        cells.push(this.addRandomCell(cells, ++lastId));
+        cells.push(this.addRandomCell(cells, ++lastId));
         this.setState({
             cells,
             lastId: (++lastId)
         })
 
         document.addEventListener("keydown", event => {
-            let { cells, lastId } = this.state;
+            this.checkGameOver();
+            let { lastId } = this.state;
+            let cells = [...this.state.cells]
+            let backupCells = JSON.stringify(this.state.cells.sort(this.compareId));
 
             switch(event.keyCode) {
                 case 37: //Arrow left
-                    cells = this.move( this.getLeftPositions() )     
+                    cells = this.move(cells, this.getLeftPositions())     
                     cells = this.fusionSimilarCells(cells, this.getLeftPositions())
-                    cells = this.move( this.getLeftPositions() )     
+                    cells = this.move(cells, this.getLeftPositions())     
                 break;
                 case 38: //Arrow up
-                    cells = this.move(this.getUpPositions())
+                    cells = this.move(cells, this.getUpPositions())
                     cells = this.fusionSimilarCells(cells, this.getUpPositions())
-                    cells = this.move( this.getUpPositions() )    
+                    cells = this.move(cells, this.getUpPositions())    
                 break;
                 case 39: //Arrow right
-                    cells = this.move(this.getRightPositions(), true)
+                    cells = this.move(cells, this.getRightPositions(), true)
                     cells = this.fusionSimilarCells(cells, this.getRightPositions())
-                    cells = this.move( this.getRightPositions(), true )    
+                    cells = this.move(cells, this.getRightPositions(), true)    
                 break;
                 case 40: //Arrow down
-                    cells = this.move(this.getDownPositions(), true)
+                    cells = this.move(cells, this.getDownPositions(), true)
                     cells = this.fusionSimilarCells(cells, this.getDownPositions())
-                    cells = this.move( this.getDownPositions(), true )    
+                    cells = this.move(cells, this.getDownPositions(), true)    
                 break;
-                default: 
-                break;
+                default: return;
             }
 
-            cells.push(this.addRandomCell(cells, ++lastId));
-            if(cells && cells.length > 0) {
-                console.log('cells', cells)
-                this.setState({
-                    cells,
-                    lastId: (lastId + 1)
-                })
-                this.forceUpdate();    
-            }         
+            if(this.checkChangeGrid(cells, backupCells)) {
+                cells.push(this.addRandomCell(cells, ++lastId));
+                if(cells && cells.length > 0) {
+                    console.log('cells', cells)
+                    this.setState({
+                        cells,
+                        lastId: (lastId + 1)
+                    })
+                    this.forceUpdate();    
+                } 
+            }      
+              
         });
     }
 
-    move = (positions, reverse) => {
-        let { cells } = this.state;
+    move = (cells, positions, reverse) => {
         cells.sort(this.compare);
         if(reverse) cells.reverse();
 
@@ -111,7 +118,7 @@ class Grid extends PureComponent {
                         } else {
                             //Check if the cells are joined
                             if(
-                                cells[findValues[item.value]].position === row[indexPosition - 1]
+                                cells[findValues[item.value]] && cells[findValues[item.value]].position === row[indexPosition - 1]
                             ) {
                                 cells[ findValues[item.value] ].value += item.value;
                                 delete findValues[item.value];
@@ -154,6 +161,22 @@ class Grid extends PureComponent {
         if (a.position > b.position) return 1;
         return 0;
     }
+    compareId = (a, b) => {
+        if (a.id < b.id) return -1;
+        if (a.id > b.id) return 1;
+        return 0;
+    }
+
+    checkChangeGrid = (cells, backupCells) => {
+        let stateCells = [...this.state.cells]
+        stateCells.sort(this.compareId);
+        cells.sort(this.compareId);
+        console.log(JSON.stringify(cells, null, 2) , backupCells)
+        if(JSON.stringify(cells) === backupCells) {
+            return false;
+        }
+        return true;
+    }
 
     shiftCell = (item, positions) => {
         let index = positions.indexOf(item.position);
@@ -167,6 +190,20 @@ class Grid extends PureComponent {
 
         item.position = positions[index - 1];
         return this.shiftCell(item, positions);
+    }
+
+    checkGameOver = () => {
+        const { cells } = this.state;
+        if(cells.length === 16) {
+            let find = false;
+            cells.map((item, index) => {
+                if(cells[index + 1] && item.value === cells[index + 1].value) find = true;
+                if(cells[index + 4] && item.value === cells[index + 4].value) find = true;
+                return true;
+            })
+            if(find) return;
+            alert('GAME OVER!!');
+        }
     }
 
     //Check if there are some numbers equal near each element
@@ -210,6 +247,7 @@ class Grid extends PureComponent {
     //Generate actual cells that moves around in the grid when the user press keys
     generateCells = () => {
         const { cells } = this.state;
+        cells.sort(this.compareId);
         return cells.map(({id, value, position}) => <Cell key={id} value={value} index={position}/>)
     }
 

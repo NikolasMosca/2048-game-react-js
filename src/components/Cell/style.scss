@@ -18,6 +18,7 @@
         width: 25%;
         height: 25%;
         transition: 0.4s;
+        animation: appear-cell 1s;
     }
 
     &.cell-0 { transform: translate(0, 0); }
@@ -54,4 +55,9 @@
     &.value-16384 { background: #111111; color: white;}
     &.value-32768 { background: #AAAAAA; color: black; }
     &.value-65356 { background: #DDDDDD; color: black; }
+}
+
+@keyframes appear-cell {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
 }
