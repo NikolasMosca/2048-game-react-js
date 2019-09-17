@@ -13,12 +13,12 @@
     @extend %flex-center;
 
     &.active {
-        background: black;
         position: absolute;
         width: 25%;
         height: 25%;
         transition: 0.4s;
         animation: appear-cell 1s;
+        animation-iteration-count: 2;
     }
 
     &.cell-0 { transform: translate(0, 0); }
@@ -59,5 +59,5 @@
 
 @keyframes appear-cell {
     0% { opacity: 0; }
-    100% { opacity: 1; }
+    100% { opacity: 1 }
 }
