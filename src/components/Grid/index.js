@@ -6,7 +6,8 @@ import Cell from '../Cell';
 class Grid extends PureComponent {
     state = {
         cells: [],
-        lastId: 100
+        lastId: 100,
+        gameover: false
     }
 
     getLeftPositions = () => 
@@ -40,10 +41,8 @@ class Grid extends PureComponent {
         })
 
         document.addEventListener("keydown", event => {
-            if(this.checkGameOver()) {
-                alert('GAME OVER!!');
-                return;
-            }
+            if(this.checkGameOver()) return;
+
             let { lastId } = this.state;
             let cells = [...this.state.cells]
             let backupCells = JSON.stringify(this.state.cells.sort(this.compareId));
@@ -84,6 +83,11 @@ class Grid extends PureComponent {
                 } 
             }      
               
+            if(this.checkGameOver()) {
+                this.setState({
+                    gameover: true
+                })
+            }
         });
     }
 
@@ -264,11 +268,17 @@ class Grid extends PureComponent {
     }
 
     render() {
+        const { gameover } = this.state;
         return (
             <div className="Grid">
                 {this.generateBackgroundCells()}
                 <div className="Overlay">
                     {this.generateCells()}
+                    {(gameover) ? (
+                        <div className="GameOver">
+                            GAME OVER
+                        </div>
+                    ) : false}
                 </div>
             </div>
         );
