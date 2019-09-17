@@ -40,7 +40,10 @@ class Grid extends PureComponent {
         })
 
         document.addEventListener("keydown", event => {
-            this.checkGameOver();
+            if(this.checkGameOver()) {
+                alert('GAME OVER!!');
+                return;
+            }
             let { lastId } = this.state;
             let cells = [...this.state.cells]
             let backupCells = JSON.stringify(this.state.cells.sort(this.compareId));
@@ -107,33 +110,31 @@ class Grid extends PureComponent {
     fusionSimilarCells = (cells, positions) => {
         positions.map(row => {
             let findValues = {};
-            row.map((position, indexPosition) => {
-                
+            row.map((position, indexPosition) => {         
                 let deleteCellsIndex = [];
-
                 cells.map((item, index) => {
                     if(item.position === position) {
-                        if(typeof findValues[item.value] === 'undefined') {
-                            findValues[item.value] = index;
+
+                        if(
+                            typeof findValues[item.value] !== undefined && 
+                            cells[findValues[item.value]] && 
+                            cells[findValues[item.value]].position === row[indexPosition - 1]
+                        ) {
+                            cells[ findValues[item.value] ].value += item.value;
+                            delete findValues[item.value];
+                            deleteCellsIndex.push(index);
                         } else {
-                            //Check if the cells are joined
-                            if(
-                                cells[findValues[item.value]] && cells[findValues[item.value]].position === row[indexPosition - 1]
-                            ) {
-                                cells[ findValues[item.value] ].value += item.value;
-                                delete findValues[item.value];
-                                deleteCellsIndex.push(index);
-                            }
+                            findValues[item.value] = index;
                         }
+
                     }
                     return true;
                 })
 
                 //Remove cells that I have fusion
                 deleteCellsIndex.map(index => cells.splice(index, 1));
-
                 return true;
-            })
+            })    
             return true;
         })
         return cells;
@@ -196,14 +197,25 @@ class Grid extends PureComponent {
         const { cells } = this.state;
         if(cells.length === 16) {
             let find = false;
-            cells.map((item, index) => {
-                if(cells[index + 1] && item.value === cells[index + 1].value) find = true;
-                if(cells[index + 4] && item.value === cells[index + 4].value) find = true;
-                return true;
-            })
-            if(find) return;
-            alert('GAME OVER!!');
+            let objCells = {};
+            cells.map(item => objCells[ item.position ] = item.value)
+            for(let index in objCells) {
+                index = parseInt(index);
+                if(index !== 3 && index !== 7 && index !== 11 && index !== 15) {
+                    if(objCells[index + 1] && objCells[index] === objCells[index + 1]) {
+                        find = true;
+                    }
+                }
+                if(index !== 12 && index !== 13 && index !== 14 && index !== 15) {
+                    if(objCells[index + 4] && objCells[index] === objCells[index + 4]) {
+                        find = true;
+                    }
+                }
+            }
+            if(find) return false;
+            return true;
         }
+        return false;
     }
 
     //Check if there are some numbers equal near each element
@@ -252,7 +264,6 @@ class Grid extends PureComponent {
     }
 
     render() {
-        console.log('render')
         return (
             <div className="Grid">
                 {this.generateBackgroundCells()}
