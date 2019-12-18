@@ -74,7 +74,6 @@ class Grid extends PureComponent {
             if(this.checkChangeGrid(cells, backupCells)) {
                 cells.push(this.addRandomCell(cells, ++lastId));
                 if(cells && cells.length > 0) {
-                    console.log('cells', cells)
                     this.setState({
                         cells,
                         lastId: (lastId + 1)
@@ -176,7 +175,6 @@ class Grid extends PureComponent {
         let stateCells = [...this.state.cells]
         stateCells.sort(this.compareId);
         cells.sort(this.compareId);
-        console.log(JSON.stringify(cells, null, 2) , backupCells)
         if(JSON.stringify(cells) === backupCells) {
             return false;
         }
@@ -264,7 +262,9 @@ class Grid extends PureComponent {
     generateCells = () => {
         const { cells } = this.state;
         cells.sort(this.compareId);
-        return cells.map(({id, value, position}) => <Cell key={id} value={value} index={position}/>)
+        return cells.map(({id, value, position}, index) => 
+            <Cell key={id} value={value} index={position} last={(index + 1 === cells.length) ? true : false}/>
+        )
     }
 
     render() {
