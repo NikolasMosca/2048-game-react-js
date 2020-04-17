@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import { Swipeable } from 'react-swipeable'
 import './style.scss';
 
 import Cell from '../Cell';
@@ -41,53 +42,77 @@ class Grid extends PureComponent {
         })
 
         document.addEventListener("keydown", event => {
-            if(this.checkGameOver()) return;
-
-            let { lastId } = this.state;
-            let cells = [...this.state.cells]
-            let backupCells = JSON.stringify(this.state.cells.sort(this.compareId));
-
             switch(event.keyCode) {
                 case 37: //Arrow left
-                    cells = this.move(cells, this.getLeftPositions())     
-                    cells = this.fusionSimilarCells(cells, this.getLeftPositions())
-                    cells = this.move(cells, this.getLeftPositions())     
+                    this.onEventSubmit('Left'); 
                 break;
                 case 38: //Arrow up
-                    cells = this.move(cells, this.getUpPositions())
-                    cells = this.fusionSimilarCells(cells, this.getUpPositions())
-                    cells = this.move(cells, this.getUpPositions())    
+                    this.onEventSubmit('Up');  
                 break;
                 case 39: //Arrow right
-                    cells = this.move(cells, this.getRightPositions(), true)
-                    cells = this.fusionSimilarCells(cells, this.getRightPositions())
-                    cells = this.move(cells, this.getRightPositions(), true)    
+                    this.onEventSubmit('Right');   
                 break;
                 case 40: //Arrow down
-                    cells = this.move(cells, this.getDownPositions(), true)
-                    cells = this.fusionSimilarCells(cells, this.getDownPositions())
-                    cells = this.move(cells, this.getDownPositions(), true)    
+                    this.onEventSubmit('Down');     
                 break;
                 default: return;
             }
-
-            if(this.checkChangeGrid(cells, backupCells)) {
-                cells.push(this.addRandomCell(cells, ++lastId));
-                if(cells && cells.length > 0) {
-                    this.setState({
-                        cells,
-                        lastId: (lastId + 1)
-                    })
-                    this.forceUpdate();    
-                } 
-            }      
-              
-            if(this.checkGameOver()) {
-                this.setState({
-                    gameover: true
-                })
-            }
         });
+    }
+
+    //Manage swipes in touchscreens
+    swipeHandler = (e) => {
+        this.onEventSubmit(e.dir);
+    }
+
+    //Perform the action and move the cells!
+    onEventSubmit = (direction) => {
+        if(this.checkGameOver()) return;
+
+        let { lastId } = this.state;
+        let cells = [...this.state.cells]
+        let backupCells = JSON.stringify(this.state.cells.sort(this.compareId));
+
+        switch(direction) {
+            case 'Left':
+                cells = this.move(cells, this.getLeftPositions())     
+                cells = this.fusionSimilarCells(cells, this.getLeftPositions())
+                cells = this.move(cells, this.getLeftPositions())     
+            break;
+            case 'Up':
+                cells = this.move(cells, this.getUpPositions())
+                cells = this.fusionSimilarCells(cells, this.getUpPositions())
+                cells = this.move(cells, this.getUpPositions())    
+            break;
+            case 'Right':
+                cells = this.move(cells, this.getRightPositions(), true)
+                cells = this.fusionSimilarCells(cells, this.getRightPositions())
+                cells = this.move(cells, this.getRightPositions(), true)    
+            break;
+            case 'Down':
+                cells = this.move(cells, this.getDownPositions(), true)
+                cells = this.fusionSimilarCells(cells, this.getDownPositions())
+                cells = this.move(cells, this.getDownPositions(), true)    
+            break;
+            default: return;
+        }
+
+        if(this.checkChangeGrid(cells, backupCells)) {
+            cells.push(this.addRandomCell(cells, ++lastId));
+            if(cells && cells.length > 0) {
+                this.setState({
+                    cells,
+                    lastId: (lastId + 1)
+                })
+                this.forceUpdate();    
+            } 
+        }      
+          
+        if(this.checkGameOver()) {
+            this.setState({
+                gameover: true
+            })
+        }
     }
 
     move = (cells, positions, reverse) => {
@@ -270,17 +295,20 @@ class Grid extends PureComponent {
     render() {
         const { gameover } = this.state;
         return (
-            <div className="Grid">
+            <Swipeable onSwiped={this.swipeHandler} className="Grid">
                 {this.generateBackgroundCells()}
                 <div className="Overlay">
                     {this.generateCells()}
-                    {(gameover) ? (
+                    {(gameover && (
                         <div className="GameOver">
                             GAME OVER
+                            <div className="Retry" onClick={() => window.location.reload()}>
+                                Click me to retry!
+                            </div>
                         </div>
-                    ) : false}
+                    ))}
                 </div>
-            </div>
+            </Swipeable>
         );
     }
 }
