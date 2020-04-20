@@ -6,6 +6,10 @@
   box-sizing: border-box;
 }
 
+html, body {
+  overscroll-behavior-y: contain;
+}
+
 body {
   background: linear-gradient(270deg, #ff0000, #00ff0a, #0027ff);
   background-size: 300% 300%;
