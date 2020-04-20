@@ -4,6 +4,11 @@ import './style.scss';
 
 import Cell from '../Cell';
 
+//Swipable configuration to avoid pull down refresh for mobile browser
+const SwipeableConfig = {
+    preventDefaultTouchmoveEvent: false
+}
+
 class Grid extends PureComponent {
     state = {
         cells: [],
@@ -295,7 +300,7 @@ class Grid extends PureComponent {
     render() {
         const { gameover } = this.state;
         return (
-            <Swipeable onSwiped={this.swipeHandler} className="Grid">
+            <Swipeable onSwiped={this.swipeHandler} {...SwipeableConfig} className="Grid">
                 {this.generateBackgroundCells()}
                 <div className="Overlay">
                     {this.generateCells()}

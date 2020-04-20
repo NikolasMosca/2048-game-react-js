@@ -12,8 +12,14 @@
     @media screen and (max-width: 750px) {
         font-size: 40px;
     }
+    @media screen and (max-height: 750px) {
+        font-size: 40px;
+    }
 
     @media screen and (max-width: 450px) {
+        font-size: 30px;
+    }
+    @media screen and (max-height: 450px) {
         font-size: 30px;
     }
 
