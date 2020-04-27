@@ -22,6 +22,7 @@ body {
   width: 100vw;
   height: 80vh;
   @extend %flex-center;
+  flex-direction: column;
 }
 
 @-webkit-keyframes gradient-color {

@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import { Swipeable } from 'react-swipeable'
+import GitHubButton from 'react-github-btn'
 import './style.scss';
 
 import Cell from '../Cell';
@@ -300,20 +301,30 @@ class Grid extends PureComponent {
     render() {
         const { gameover } = this.state;
         return (
-            <Swipeable onSwiped={this.swipeHandler} {...SwipeableConfig} className="Grid">
-                {this.generateBackgroundCells()}
-                <div className="Overlay">
-                    {this.generateCells()}
-                    {(gameover && (
-                        <div className="GameOver">
-                            GAME OVER
-                            <div className="Retry" onClick={() => window.location.reload()}>
-                                Click me to retry!
+            <>
+                <Swipeable onSwiped={this.swipeHandler} {...SwipeableConfig} className="Grid">
+                    {this.generateBackgroundCells()}
+                    <div className="Overlay">
+                        {this.generateCells()}
+                        {(gameover && (
+                            <div className="GameOver">
+                                GAME OVER
+                                <div className="Retry" onClick={() => window.location.reload()}>
+                                    Click me to retry!
+                                </div>
                             </div>
-                        </div>
-                    ))}
-                </div>
-            </Swipeable>
+                        ))}
+                    </div>
+                </Swipeable>
+            
+                <GitHubButton 
+                    href="https://github.com/NikolasMosca/2048-game-react-js" 
+                    data-color-scheme="no-preference: dark; light: light; dark: dark;" 
+                    data-icon="octicon-star" 
+                    data-size="large" 
+                    aria-label="Star my repository on GitHub"
+                >If you like it give me a star :)</GitHubButton>
+            </>
         );
     }
 }
